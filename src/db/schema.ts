@@ -16,6 +16,7 @@ export const users = pgTable(
         id: cuid2("id").defaultRandom().primaryKey(),
         username: varchar("username").notNull(),
         password: text("password").notNull(),
+        role: varchar("role").notNull(),
     },
     (user) => ({
         usernameUidx: uniqueIndex("user_username_uidx").on(user.username),
