@@ -145,5 +145,7 @@ export const adminMiddleware = createMiddleware(async (c, next) => {
         );
     }
 
+    console.log("user is admin");
+
     await next();
 });
