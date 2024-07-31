@@ -15,6 +15,7 @@
         "infra:down": "docker compose --file docker/infrastructure/compose.yml --env-file .env down"
     },
     "dependencies": {
+        "@hono/zod-validator": "^0.2.2",
         "@t3-oss/env-core": "^0.11.0",
         "drizzle-cuid2": "^1.0.5",
         "drizzle-orm": "^0.32.1",

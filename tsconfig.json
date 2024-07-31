@@ -25,6 +25,7 @@
         "noUnusedParameters": false,
         "noPropertyAccessFromIndexSignature": false,
 
+        "allowSyntheticDefaultImports": true,
         "paths": {
             "@*": ["./src*"]
         }
