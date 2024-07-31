@@ -39,8 +39,43 @@ export const accounts = pgTable(
     }),
 );
 
+export const recipes = pgTable("recipe", {
+    id: cuid2("id").defaultRandom().primaryKey(),
+    title: text("title"),
+    content: text("content"),
+    ingredients: text("ingredients"),
+    instructions: text("instructions"),
+    category: text("category"),
+    userId: cuid2("user_id")
+        .notNull()
+        .references(() => users.id),
+});
+
+export const ratings = pgTable("rating", {
+    id: cuid2("id").defaultRandom().primaryKey(),
+    recipeId: cuid2("recipe_id")
+        .notNull()
+        .references(() => recipes.id),
+    userId: cuid2("user_id")
+        .notNull()
+        .references(() => users.id),
+    rating: text("rating"),
+});
+
 /* ------------------------------ RELATIONSHIP ------------------------------ */
 
-export const usersRelations = relations(users, ({ one }) => ({
+export const usersRelations = relations(users, ({ one, many }) => ({
     account: one(accounts),
+    recipes: many(recipes),
+    ratings: many(ratings),
+}));
+
+export const recipesRelations = relations(recipes, ({ one, many }) => ({
+    user: one(users),
+    ratings: many(ratings),
+}));
+
+export const ratingsRelations = relations(ratings, ({ one, many }) => ({
+    user: one(users),
+    recipe: one(recipes),
 }));
