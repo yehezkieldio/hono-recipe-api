@@ -39,43 +39,68 @@ export const accounts = pgTable(
     }),
 );
 
-export const recipes = pgTable("recipe", {
-    id: cuid2("id").defaultRandom().primaryKey(),
-    title: text("title"),
-    content: text("content"),
-    ingredients: text("ingredients"),
-    instructions: text("instructions"),
-    category: text("category"),
-    userId: cuid2("user_id")
-        .notNull()
-        .references(() => users.id),
-});
+export const recipes = pgTable(
+    "recipe",
+    {
+        id: cuid2("id").defaultRandom().primaryKey(),
+        title: text("title"),
+        content: text("content"),
+        ingredients: text("ingredients"),
+        instructions: text("instructions"),
+        category: text("category"),
+        userId: cuid2("user_id")
+            .notNull()
+            .references(() => users.id),
+    },
+    (recipe) => ({
+        userIdUidx: uniqueIndex("recipe_user_id_uidx").on(recipe.userId),
+    }),
+);
 
-export const ratings = pgTable("rating", {
-    id: cuid2("id").defaultRandom().primaryKey(),
-    recipeId: cuid2("recipe_id")
-        .notNull()
-        .references(() => recipes.id),
-    userId: cuid2("user_id")
-        .notNull()
-        .references(() => users.id),
-    rating: text("rating"),
-});
+export const ratings = pgTable(
+    "rating",
+    {
+        id: cuid2("id").defaultRandom().primaryKey(),
+        rating: text("rating"),
+        userId: cuid2("user_id")
+            .notNull()
+            .references(() => users.id),
+        recipeId: cuid2("recipe_id")
+            .notNull()
+            .references(() => recipes.id),
+    },
+    (rating) => ({
+        recipeIdUidx: uniqueIndex("rating_recipe_id_uidx").on(rating.recipeId),
+        userIdUidx: uniqueIndex("rating_user_id_uidx").on(rating.userId),
+    }),
+);
 
 /* ------------------------------ RELATIONSHIP ------------------------------ */
 
 export const usersRelations = relations(users, ({ one, many }) => ({
-    account: one(accounts),
+    account: one(accounts, {
+        fields: [users.id],
+        references: [accounts.userId],
+    }),
     recipes: many(recipes),
     ratings: many(ratings),
 }));
 
 export const recipesRelations = relations(recipes, ({ one, many }) => ({
-    user: one(users),
+    user: one(users, {
+        fields: [recipes.userId],
+        references: [users.id],
+    }),
     ratings: many(ratings),
 }));
 
 export const ratingsRelations = relations(ratings, ({ one, many }) => ({
-    user: one(users),
-    recipe: one(recipes),
+    user: one(users, {
+        fields: [ratings.userId],
+        references: [users.id],
+    }),
+    recipe: one(recipes, {
+        fields: [ratings.recipeId],
+        references: [recipes.id],
+    }),
 }));
