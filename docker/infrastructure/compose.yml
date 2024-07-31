@@ -1,0 +1,19 @@
+services:
+  postgresql:
+    container_name: hono-recipe-postgresql
+    image: postgres:latest
+    env_file:
+      - path: "../../.env"
+    ports:
+    - "5432:5432"
+    environment:
+      POSTGRES_USER: ${DOCKER_DB_USER}
+      POSTGRES_PASSWORD: ${DOCKER_DB_PASSWORD}
+      POSTGRES_DB: ${DOCKER_DB_NAME}
+    volumes:
+      - ./data/pg:/var/lib/postgresql/data
+    networks:
+      - hono-recipe-infrastructure
+networks:
+  hono-recipe-infrastructure:
+    driver: bridge
