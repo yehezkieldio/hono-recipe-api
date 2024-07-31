@@ -1,7 +1,18 @@
 {
     "name": "hono-recipe-api",
     "scripts": {
-        "dev": "bun run --hot src/index.ts"
+        "dev": "bun run --hot src/index.ts",
+        "format": "biome format --write ./src",
+        "format:check": "biome format ./src",
+        "lint": "biome check --write ./src",
+        "lint:unsafe": "biome check --write --unsafe ./src",
+        "lint:check": "biome check ./src",
+        "typecheck": "tsc",
+        "db:push": "drizzle-kit push",
+        "db:studio": "drizzle-kit studio",
+        "db:generate": "drizzle-kit generate",
+        "infra:up": "docker compose --file docker/infrastructure/compose.yml --env-file .env up -d",
+        "infra:down": "docker compose --file docker/infrastructure/compose.yml --env-file .env down"
     },
     "dependencies": {
         "@t3-oss/env-core": "^0.11.0",
