@@ -201,4 +201,28 @@ authModule.post("/refresh", async (c) => {
     });
 });
 
+authModule.post("/signout", async (c) => {
+    const accessToken = await getSignedCookie(c, env.JWT_SECRET, "access_token");
+
+    if (!accessToken) {
+        return c.json(
+            {
+                success: false,
+                message: "Access token is required",
+            },
+            401,
+        );
+    }
+
+    await db.delete(accounts).where(eq(accounts.accessToken, accessToken));
+
+    deleteCookie(c, "access_token");
+    deleteCookie(c, "refresh_token");
+
+    return c.json({
+        success: true,
+        message: "Sign out successful",
+    });
+});
+
 export default authModule;

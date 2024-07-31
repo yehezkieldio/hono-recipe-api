@@ -1,6 +1,6 @@
 import { cuid2 } from "drizzle-cuid2/postgres";
 import { relations } from "drizzle-orm";
-import { pgTable, pgTableCreator, text, uniqueIndex, varchar } from "drizzle-orm/pg-core";
+import { index, pgTable, pgTableCreator, text, uniqueIndex, varchar } from "drizzle-orm/pg-core";
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM.
@@ -35,6 +35,7 @@ export const accounts = pgTable(
     },
     (account) => ({
         userIdUidx: uniqueIndex("account_user_id_uidx").on(account.userId),
+        accessTokenIdx: index("account_access_token_idx").on(account.accessToken),
     }),
 );
 
