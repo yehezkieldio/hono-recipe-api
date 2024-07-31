@@ -45,6 +45,16 @@ export const authMiddleware = createMiddleware(async (c, next) => {
         );
     }
 
+    if (account.accessToken !== accessToken) {
+        return c.json(
+            {
+                success: false,
+                message: "Access token is invalid",
+            },
+            401,
+        );
+    }
+
     if (jwtPayload.exp && jwtPayload.exp < Date.now() / 1000) {
         return c.json(
             {
@@ -108,6 +118,16 @@ export const adminMiddleware = createMiddleware(async (c, next) => {
                 message: "Account not found",
             },
             404,
+        );
+    }
+
+    if (account.accessToken !== accessToken) {
+        return c.json(
+            {
+                success: false,
+                message: "Access token is invalid",
+            },
+            401,
         );
     }
 
